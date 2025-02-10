@@ -1,9 +1,8 @@
-
 import { TaskProvider } from "@/contexts/TaskContext";
 import { TaskList } from "@/components/TaskList";
 import { Calendar } from "@/components/Calendar";
 import { Button } from "@/components/ui/button";
-import { Plus } from "lucide-react";
+import { Plus, Calendar as CalendarIcon, MessageSquare } from "lucide-react";
 import { useState } from "react";
 import {
   Dialog,
@@ -22,6 +21,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { useTaskContext } from "@/contexts/TaskContext";
+import { ChatDialog } from "@/components/ChatDialog";
 
 function AddTaskDialog() {
   const [title, setTitle] = useState("");
@@ -102,19 +102,32 @@ function AddTaskDialog() {
 }
 
 export default function Index() {
+  const [showCalendar, setShowCalendar] = useState(false);
+
   return (
     <TaskProvider>
       <div className="container mx-auto py-8">
         <div className="mb-8 flex items-center justify-between">
           <h1 className="text-4xl font-bold">Tasks</h1>
-          <AddTaskDialog />
+          <div className="flex items-center gap-4">
+            <Button
+              variant="outline"
+              size="icon"
+              onClick={() => setShowCalendar(!showCalendar)}
+              className="h-10 w-10"
+            >
+              <CalendarIcon className="h-5 w-5" />
+            </Button>
+            <ChatDialog />
+            <AddTaskDialog />
+          </div>
         </div>
         <div className="grid gap-8 md:grid-cols-2">
-          <div className="space-y-6">
+          <div className={`space-y-6 ${showCalendar ? 'hidden md:block' : ''}`}>
             <h2 className="text-2xl font-semibold">Upcoming Tasks</h2>
             <TaskList />
           </div>
-          <div className="rounded-lg border bg-card p-6 shadow-sm">
+          <div className={`rounded-lg border bg-card p-6 shadow-sm ${!showCalendar ? 'hidden md:block' : ''}`}>
             <Calendar />
           </div>
         </div>

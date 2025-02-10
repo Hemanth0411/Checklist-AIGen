@@ -10,4 +10,6 @@ export interface Task {
   customDays?: number[];
   dueDate: Date;
   createdAt: Date;
+  currentStreak: number;
+  lastCompletedDate?: Date;
 }

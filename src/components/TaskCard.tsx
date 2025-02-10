@@ -4,7 +4,7 @@ import { useTaskContext } from "@/contexts/TaskContext";
 import { Checkbox } from "@/components/ui/checkbox";
 import { format } from "date-fns";
 import { motion } from "framer-motion";
-import { Repeat, Trash2, Edit } from "lucide-react";
+import { Repeat, Trash2, Edit, Flame } from "lucide-react";
 import { Button } from "./ui/button";
 import { useState } from "react";
 import {
@@ -32,7 +32,7 @@ export function TaskCard({ task }: TaskCardProps) {
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
   const [editedTitle, setEditedTitle] = useState(task.title);
   const [editedDescription, setEditedDescription] = useState(task.description || "");
-  const [editedRepeatFrequency, setEditedRepeatFrequency] = useState(task.repeatFrequency);
+  const [editedRepeatFrequency, setEditedRepeatFrequency] = useState<Task["repeatFrequency"]>(task.repeatFrequency);
 
   const handleEdit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -40,10 +40,12 @@ export function TaskCard({ task }: TaskCardProps) {
       ...task,
       title: editedTitle,
       description: editedDescription,
-      repeatFrequency: editedRepeatFrequency as Task["repeatFrequency"],
+      repeatFrequency: editedRepeatFrequency,
     });
     setIsEditDialogOpen(false);
   };
+
+  const showStreak = ["daily", "weekly"].includes(task.repeatFrequency) && task.currentStreak > 0;
 
   return (
     <>
@@ -58,13 +60,21 @@ export function TaskCard({ task }: TaskCardProps) {
             className="mt-1 h-5 w-5 rounded-full"
           />
           <div className="flex-1">
-            <h3
-              className={`text-lg font-medium transition-colors ${
-                task.completed ? "text-muted-foreground line-through" : ""
-              }`}
-            >
-              {task.title}
-            </h3>
+            <div className="flex items-center gap-2">
+              <h3
+                className={`text-lg font-medium transition-colors ${
+                  task.completed ? "text-muted-foreground line-through" : ""
+                }`}
+              >
+                {task.title}
+              </h3>
+              {showStreak && (
+                <div className="flex items-center gap-1 text-orange-500">
+                  <Flame className="h-4 w-4" />
+                  <span className="text-sm font-medium">{task.currentStreak}</span>
+                </div>
+              )}
+            </div>
             {task.description && (
               <p className="mt-1 text-sm text-muted-foreground">{task.description}</p>
             )}

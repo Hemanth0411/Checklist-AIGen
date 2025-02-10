@@ -45,6 +45,11 @@ export function TaskCard({ task }: TaskCardProps) {
     setIsEditDialogOpen(false);
   };
 
+  const handleRepeatFrequencyChange = (value: string) => {
+    // Cast the string value to RepeatFrequency type since we know it's valid
+    setEditedRepeatFrequency(value as Task["repeatFrequency"]);
+  };
+
   const showStreak = ["daily", "weekly"].includes(task.repeatFrequency) && task.currentStreak > 0;
 
   return (
@@ -137,7 +142,7 @@ export function TaskCard({ task }: TaskCardProps) {
               <Label htmlFor="repeat">Repeat</Label>
               <Select
                 value={editedRepeatFrequency}
-                onValueChange={setEditedRepeatFrequency}
+                onValueChange={handleRepeatFrequencyChange}
               >
                 <SelectTrigger>
                   <SelectValue placeholder="Select frequency" />

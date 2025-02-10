@@ -8,6 +8,7 @@ interface TaskContextType {
   addTask: (task: Omit<Task, "id" | "createdAt">) => void;
   toggleTask: (id: string) => void;
   deleteTask: (id: string) => void;
+  updateTask: (id: string, updatedTask: Task) => void;
 }
 
 const TaskContext = createContext<TaskContextType | undefined>(undefined);
@@ -22,6 +23,12 @@ export function TaskProvider({ children }: { children: React.ReactNode }) {
       createdAt: new Date(),
     };
     setTasks((prev) => [...prev, newTask]);
+  }, []);
+
+  const updateTask = useCallback((id: string, updatedTask: Task) => {
+    setTasks((prev) =>
+      prev.map((task) => (task.id === id ? updatedTask : task))
+    );
   }, []);
 
   const toggleTask = useCallback((id: string) => {
@@ -83,7 +90,7 @@ export function TaskProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   return (
-    <TaskContext.Provider value={{ tasks, addTask, toggleTask, deleteTask }}>
+    <TaskContext.Provider value={{ tasks, addTask, toggleTask, deleteTask, updateTask }}>
       {children}
     </TaskContext.Provider>
   );
